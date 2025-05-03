@@ -11,6 +11,10 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 import os
 from pathlib import Path
+from channels.routing import ProtocolTypeRouter, URLRouter
+from django.core.asgi import get_asgi_application
+from channels.auth import AuthMiddlewareStack
+import core.routing
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -72,6 +76,7 @@ TEMPLATES = [
 WSGI_APPLICATION = 'broChat.wsgi.application'
 
 
+
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
@@ -118,19 +123,25 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = 'static/'
-MEDIA_URL = '/media'
+MEDIA_URL = '/media/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 #channels
 
-ASGI_APPLICATION = 'realtime.routing.application'
+ASGI_APPLICATION = 'broChat.asgi.application'
+
 
 CHANNEL_LAYERS = {
-    'default' : {
-        'BACKEND' : 'channels_redis.core.RedisChannelLayer',
-        'CONFIG' : {
-          [('127.0.0.1' , 6379)]
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [
+                {
+                    "address": "redis://gusc1-correct-hedgehog-31491.upstash.io:31491",
+                    "password": "2e7a27dafbbc41a3979b59fe9416c0ea",  # 'password' é o nome correto
+                }
+            ],
         },
     },
 }

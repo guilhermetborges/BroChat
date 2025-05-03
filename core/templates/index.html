@@ -1,0 +1,49 @@
+{% load bootstrap4 %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Geek Chat</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+    <div class="container d-flex justify-content-center align-items-center min-vh-100">
+        <div class="card shadow-lg" style="width: 100%; max-width: 500px;">
+            <div class="card-body">
+                <h2 class="card-title text-center mb-4">Escolha uma Sala de Chat</h2>
+                <div class="form-group">
+                    <label for="nome_sala">Nome da Sala:</label>
+                    <input id="nome_sala" name="nome_sala" type="text" class="form-control" placeholder="Digite o nome da sala...">
+                </div>
+                <button id="botao" class="btn btn-primary btn-block">Entrar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.querySelector('#nome_sala').focus();
+        document.querySelector('#nome_sala').onkeyup = function(e) {
+            if(e.keyCode == 13) {
+                document.querySelector('#botao').click();
+            }
+        };
+
+        document.querySelector('#botao').onclick = function(e) {
+            var nome_sala = document.querySelector('#nome_sala').value;
+            if(nome_sala != '') {
+                window.location.pathname = '/chat/' + nome_sala + '/';
+            } else {
+                alert('Você precisa informar o nome da sala.');
+                document.querySelector('#nome_sala').focus();
+            }
+        };
+    </script>
+
+    <!-- Bootstrap JS e dependências (opcional) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,66 @@
+{% load bootstrap4 %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Geek Chat</title>
+    {% bootstrap_css %}
+</head>
+<body class="bg-light">
+    <div class="container d-flex justify-content-center align-items-center min-vh-100">
+        <div class="card shadow-lg" style="width: 100%; max-width: 600px;">
+            <div class="card-body">
+                <h2 class="card-title text-center mb-4">Sala de Chat</h2>
+                <!-- Área de chat -->
+                <textarea id="sala" class="form-control mb-3" rows="15" readonly></textarea>
+                
+                <!-- Input de mensagem -->
+                <div class="form-group">
+                    <input id="texto" class="form-control" type="text" placeholder="Digite sua mensagem..." />
+                </div>
+
+                <!-- Botão Enviar -->
+                <button id="botao" class="btn btn-primary btn-block">Enviar</button>
+            </div>
+        </div>
+    </div>
+
+    {% bootstrap_javascript jquery='full' %}
+
+    <script>
+        var nome_sala = "{{ nome_sala }}";
+
+        var chatSocket = new WebSocket(
+            'ws://' + window.location.host +
+            '/ws/chat/' + nome_sala + '/'
+        );
+
+        chatSocket.onmessage = function(e){
+            var dados = JSON.parse(e.data);
+            var mensagem = dados['mensagem'];
+            document.querySelector('#sala').value += (mensagem + '\n');
+        };
+
+        chatSocket.onclose = function(e){
+            console.error('O chat encerrou de forma inesperada.');
+        };
+
+        document.querySelector('#texto').focus();
+        document.querySelector('#texto').onkeyup = function(e){
+            if(e.keyCode === 13){
+                document.querySelector('#botao').click();
+            }
+        };
+
+        document.querySelector('#botao').onclick = function(e){
+            var mensagemInput = document.querySelector('#texto');
+            var mensagem = mensagemInput.value;
+            chatSocket.send(JSON.stringify({
+                'mensagem': mensagem
+            }));
+            mensagemInput.value = '';
+        };
+    </script>
+</body>
+</html>
